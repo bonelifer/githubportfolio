@@ -1,0 +1,4 @@
+mundophpbb_githubportfolio_page:
+    path: /githubportfolio
+    defaults:
+        _controller: mundophpbb.githubportfolio.controller.main:handle

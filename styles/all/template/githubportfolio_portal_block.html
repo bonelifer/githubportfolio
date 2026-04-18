@@ -1,0 +1,115 @@
+<!-- IF S_GITHUBPORTFOLIO_PORTAL_BLOCK and S_GITHUBPORTFOLIO_HAS_PORTAL_REPOS -->
+<section class="forumportal-section forumportal-section--githubportfolio">
+    <div class="forumportal-section-head githubportfolio-section-head">
+        <div>
+            <h3 class="forumportal-section-head__title">{GITHUBPORTFOLIO_PORTAL_TITLE}</h3>
+            <!-- IF GITHUBPORTFOLIO_USERNAME --><p class="githubportfolio-section-head__sub">{L_GITHUBPORTFOLIO_PROFILE_LABEL}: <strong>{GITHUBPORTFOLIO_USERNAME}</strong></p><!-- ENDIF -->
+        </div>
+        <a class="forumportal-topbar__link githubportfolio-section-head__link" href="{U_GITHUBPORTFOLIO_PAGE}">{L_GITHUBPORTFOLIO_VIEW_ALL}</a>
+    </div>
+
+    <!-- IF S_GITHUBPORTFOLIO_HAS_PORTAL_FEATURED -->
+    <div class="githubportfolio-subhead githubportfolio-subhead--portal">
+        <h4 class="githubportfolio-subhead__title">{GITHUBPORTFOLIO_FEATURED_TITLE}</h4>
+    </div>
+
+    <div class="githubportfolio-grid githubportfolio-grid--featured-portal">
+        <!-- BEGIN githubportfolio_portal_featured_repos -->
+        <article class="githubportfolio-card githubportfolio-card--featured githubportfolio-card--portal-featured githubportfolio-card--lang-{githubportfolio_portal_featured_repos.LANGUAGE_CLASS}">
+            <div class="githubportfolio-card__top">
+                <div class="githubportfolio-card__eyebrow">
+                    <div class="githubportfolio-card__badges">
+                        <span class="githubportfolio-badge githubportfolio-badge--accent">{L_GITHUBPORTFOLIO_FEATURED_BADGE}</span>
+                        <!-- IF githubportfolio_portal_featured_repos.LANGUAGE --><span class="githubportfolio-badge githubportfolio-badge--language githubportfolio-badge--lang-{githubportfolio_portal_featured_repos.LANGUAGE_CLASS}">{githubportfolio_portal_featured_repos.LANGUAGE}</span><!-- ENDIF -->
+                        <!-- IF githubportfolio_portal_featured_repos.HAS_DISCUSSION --><a class="githubportfolio-badge githubportfolio-badge--discussion" href="{githubportfolio_portal_featured_repos.DISCUSSION_URL}"><span class="githubportfolio-badge__icon" aria-hidden="true">💬</span>{L_GITHUBPORTFOLIO_DISCUSSION_BADGE}</a><!-- ENDIF -->
+                        <!-- IF githubportfolio_portal_featured_repos.IS_FORK --><span class="githubportfolio-badge githubportfolio-badge--muted">{L_GITHUBPORTFOLIO_FORK}</span><!-- ENDIF -->
+                        <!-- IF githubportfolio_portal_featured_repos.IS_ARCHIVED --><span class="githubportfolio-badge githubportfolio-badge--muted">{L_GITHUBPORTFOLIO_ARCHIVED}</span><!-- ENDIF -->
+                    </div>
+                </div>
+
+                <div class="githubportfolio-card__headline">
+                    <h3 class="githubportfolio-title githubportfolio-title--featured"><a href="{githubportfolio_portal_featured_repos.URL}" target="_blank" rel="noopener">{githubportfolio_portal_featured_repos.NAME}</a></h3>
+                </div>
+
+                <!-- IF githubportfolio_portal_featured_repos.DESCRIPTION -->
+                <p class="githubportfolio-description githubportfolio-description--featured">{githubportfolio_portal_featured_repos.DESCRIPTION}</p>
+                <!-- ELSE -->
+                <p class="githubportfolio-description githubportfolio-description--featured githubportfolio-description--placeholder">{L_GITHUBPORTFOLIO_NO_DESCRIPTION}</p>
+                <!-- ENDIF -->
+            </div>
+
+            <div class="githubportfolio-card__footer">
+                <div class="githubportfolio-stats githubportfolio-stats--portal">
+                    <span class="githubportfolio-stat githubportfolio-stat--stars">★ {githubportfolio_portal_featured_repos.STARS}</span>
+                    <span class="githubportfolio-stat"><strong>{L_GITHUBPORTFOLIO_UPDATED}:</strong> <!-- IF githubportfolio_portal_featured_repos.UPDATED_AT -->{githubportfolio_portal_featured_repos.UPDATED_AT}<!-- ELSE -->-<!-- ENDIF --></span>
+                </div>
+
+                <div class="githubportfolio-actions">
+                    <a class="button button-secondary button-sm" href="{githubportfolio_portal_featured_repos.URL}" target="_blank" rel="noopener">{L_GITHUBPORTFOLIO_VIEW_ON_GITHUB}</a>
+                    <!-- IF githubportfolio_portal_featured_repos.DISCUSSION_URL -->
+                    <a class="button button-secondary button-sm" href="{githubportfolio_portal_featured_repos.DISCUSSION_URL}">{L_GITHUBPORTFOLIO_VIEW_DISCUSSION}</a>
+                    <!-- ENDIF -->
+                </div>
+            </div>
+        </article>
+        <!-- END githubportfolio_portal_featured_repos -->
+    </div>
+    <!-- ENDIF -->
+
+    <!-- IF S_GITHUBPORTFOLIO_HAS_PORTAL_REGULAR -->
+    <div class="githubportfolio-grid githubportfolio-grid--portal">
+        <!-- BEGIN githubportfolio_portal_repos -->
+        <article class="githubportfolio-card githubportfolio-card--portal githubportfolio-card--lang-{githubportfolio_portal_repos.LANGUAGE_CLASS}">
+            <div class="githubportfolio-card__top">
+                <div class="githubportfolio-card__eyebrow">
+                    <div class="githubportfolio-card__badges">
+                        <!-- IF githubportfolio_portal_repos.LANGUAGE --><span class="githubportfolio-badge githubportfolio-badge--language githubportfolio-badge--lang-{githubportfolio_portal_repos.LANGUAGE_CLASS}">{githubportfolio_portal_repos.LANGUAGE}</span><!-- ENDIF -->
+                        <!-- IF githubportfolio_portal_repos.HAS_DISCUSSION --><a class="githubportfolio-badge githubportfolio-badge--discussion" href="{githubportfolio_portal_repos.DISCUSSION_URL}"><span class="githubportfolio-badge__icon" aria-hidden="true">💬</span>{L_GITHUBPORTFOLIO_DISCUSSION_BADGE}</a><!-- ENDIF -->
+                        <!-- IF githubportfolio_portal_repos.IS_FORK --><span class="githubportfolio-badge githubportfolio-badge--muted">{L_GITHUBPORTFOLIO_FORK}</span><!-- ENDIF -->
+                        <!-- IF githubportfolio_portal_repos.IS_ARCHIVED --><span class="githubportfolio-badge githubportfolio-badge--muted">{L_GITHUBPORTFOLIO_ARCHIVED}</span><!-- ENDIF -->
+                    </div>
+                </div>
+
+                <div class="githubportfolio-card__headline">
+                    <h3 class="githubportfolio-title"><a href="{githubportfolio_portal_repos.URL}" target="_blank" rel="noopener">{githubportfolio_portal_repos.NAME}</a></h3>
+                </div>
+
+                <!-- IF githubportfolio_portal_repos.DESCRIPTION -->
+                <p class="githubportfolio-description githubportfolio-description--portal">{githubportfolio_portal_repos.DESCRIPTION}</p>
+                <!-- ELSE -->
+                <p class="githubportfolio-description githubportfolio-description--portal githubportfolio-description--placeholder">{L_GITHUBPORTFOLIO_NO_DESCRIPTION}</p>
+                <!-- ENDIF -->
+            </div>
+
+            <div class="githubportfolio-card__footer">
+                <div class="githubportfolio-stats githubportfolio-stats--portal">
+                    <span class="githubportfolio-stat githubportfolio-stat--stars">★ {githubportfolio_portal_repos.STARS}</span>
+                    <span class="githubportfolio-stat"><strong>{L_GITHUBPORTFOLIO_UPDATED}:</strong> <!-- IF githubportfolio_portal_repos.UPDATED_AT -->{githubportfolio_portal_repos.UPDATED_AT}<!-- ELSE -->-<!-- ENDIF --></span>
+                </div>
+
+                <div class="githubportfolio-actions">
+                    <a class="button button-secondary button-sm" href="{githubportfolio_portal_repos.URL}" target="_blank" rel="noopener">{L_GITHUBPORTFOLIO_VIEW_ON_GITHUB}</a>
+                    <!-- IF githubportfolio_portal_repos.DISCUSSION_URL -->
+                    <a class="button button-secondary button-sm" href="{githubportfolio_portal_repos.DISCUSSION_URL}">{L_GITHUBPORTFOLIO_VIEW_DISCUSSION}</a>
+                    <!-- ENDIF -->
+                </div>
+            </div>
+        </article>
+        <!-- END githubportfolio_portal_repos -->
+    </div>
+    <!-- ENDIF -->
+
+    <div class="githubportfolio-portal-foot">
+        <div class="githubportfolio-summary githubportfolio-summary--portal">
+            <span class="githubportfolio-summary__item"><strong>{GITHUBPORTFOLIO_PORTAL_REPO_TOTAL}</strong> {L_GITHUBPORTFOLIO_METRIC_PROJECTS}</span>
+            <!-- IF GITHUBPORTFOLIO_PORTAL_DISCUSSION_TOTAL -->
+            <span class="githubportfolio-summary__item"><strong>{GITHUBPORTFOLIO_PORTAL_DISCUSSION_TOTAL}</strong> {L_GITHUBPORTFOLIO_METRIC_DISCUSSIONS}</span>
+            <!-- ENDIF -->
+            <!-- IF S_GITHUBPORTFOLIO_HAS_LAST_SYNC -->
+            <span class="githubportfolio-summary__item githubportfolio-summary__item--sync">{L_GITHUBPORTFOLIO_LAST_SYNC}: <strong>{GITHUBPORTFOLIO_LAST_SYNC}</strong></span>
+            <!-- ENDIF -->
+        </div>
+        <a class="button button-secondary button-sm githubportfolio-portal-foot__link" href="{U_GITHUBPORTFOLIO_PAGE}">{L_GITHUBPORTFOLIO_VIEW_ALL}</a>
+    </div>
+</section>
+<!-- ENDIF -->

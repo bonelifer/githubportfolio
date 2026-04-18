@@ -1,0 +1,26 @@
+services:
+    mundophpbb.githubportfolio.github_api:
+        class: mundophpbb\githubportfolio\service\github_api
+        arguments:
+            - '@config'
+            - '@cache.driver'
+
+    mundophpbb.githubportfolio.controller.main:
+        class: mundophpbb\githubportfolio\controller\main_controller
+        arguments:
+            - '@template'
+            - '@user'
+            - '@controller.helper'
+            - '@mundophpbb.githubportfolio.github_api'
+            - '@config'
+
+    mundophpbb.githubportfolio.listener:
+        class: mundophpbb\githubportfolio\event\main_listener
+        arguments:
+            - '@template'
+            - '@controller.helper'
+            - '@config'
+            - '@user'
+            - '@mundophpbb.githubportfolio.github_api'
+        tags:
+            - { name: event.listener }

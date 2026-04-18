@@ -1,0 +1,394 @@
+<!-- INCLUDE overall_header.html -->
+
+<style>
+.gp-acp-status-wrap {
+	margin: 0 0 12px 0;
+}
+.gp-acp-status-lead {
+	margin: 0 0 10px 0;
+	font-size: .92em;
+	color: #5b6670;
+}
+.gp-acp-status-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+	gap: 8px;
+	margin: 0 0 10px 0;
+}
+.gp-acp-stat {
+	background: #fafbfd;
+	border: 1px solid #dce1e6;
+	border-radius: 3px;
+	padding: 8px 10px;
+}
+.gp-acp-stat strong {
+	display: block;
+	font-size: 1.12em;
+	line-height: 1.1;
+	margin-bottom: 2px;
+	color: #2b3a42;
+}
+.gp-acp-stat span {
+	display: block;
+	font-size: .84em;
+	color: #66737d;
+}
+.gp-acp-status-panels {
+	display: grid;
+	grid-template-columns: 1.2fr .95fr;
+	gap: 10px;
+}
+.gp-acp-panel {
+	background: #fbfcfd;
+	border: 1px solid #dce1e6;
+	border-radius: 3px;
+	padding: 0;
+	overflow: hidden;
+}
+.gp-acp-panel h3 {
+	margin: 0;
+	padding: 8px 10px;
+	font-size: .92em;
+	background: #f4f6f8;
+	border-bottom: 1px solid #dce1e6;
+}
+.gp-acp-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.gp-acp-list li {
+	display: flex;
+	justify-content: space-between;
+	gap: 10px;
+	padding: 7px 10px;
+	border-top: 1px solid #edf1f4;
+}
+.gp-acp-list li:first-child {
+	border-top: 0;
+}
+.gp-acp-list .gp-label {
+	font-size: .92em;
+	color: #5f6d77;
+}
+.gp-acp-list .gp-value {
+	text-align: right;
+	font-size: .92em;
+	font-weight: 600;
+	color: #26343c;
+}
+.gp-acp-list .gp-value small {
+	display: block;
+	margin-top: 1px;
+	font-size: .9em;
+	font-weight: 400;
+	color: #6e7b85;
+}
+.gp-acp-links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin: 10px 0 0 0;
+}
+.gp-acp-links a {
+	display: inline-block;
+	padding: 4px 8px;
+	font-size: .9em;
+	border: 1px solid #dce1e6;
+	border-radius: 3px;
+	background: #fff;
+	text-decoration: none;
+}
+.gp-acp-help {
+	margin: 0;
+	padding-left: 18px;
+	font-size: .92em;
+}
+.gp-acp-help li {
+	margin: 0 0 4px 0;
+}
+@media (max-width: 900px) {
+	.gp-acp-status-panels {
+		grid-template-columns: 1fr;
+	}
+}
+</style>
+
+<h1>{L_ACP_GITHUBPORTFOLIO_TITLE}</h1>
+<p>{L_ACP_GITHUBPORTFOLIO_SETTINGS_EXPLAIN}</p>
+
+<form id="acp_githubportfolio" method="post" action="{U_ACTION}">
+	<fieldset>
+		<legend>{L_ACP_GITHUBPORTFOLIO_STATUS}</legend>
+		<div class="gp-acp-status-wrap">
+			<p class="gp-acp-status-lead">{L_ACP_GITHUBPORTFOLIO_STATUS_EXPLAIN}</p>
+
+			<div class="gp-acp-status-grid">
+				<div class="gp-acp-stat">
+					<strong>{ACP_GITHUBPORTFOLIO_VISIBLE_TOTAL}</strong>
+					<span>{L_ACP_GITHUBPORTFOLIO_STATUS_VISIBLE_PROJECTS}</span>
+				</div>
+				<div class="gp-acp-stat">
+					<strong>{ACP_GITHUBPORTFOLIO_FEATURED_TOTAL}</strong>
+					<span>{L_ACP_GITHUBPORTFOLIO_STATUS_FEATURED_PROJECTS}</span>
+				</div>
+				<div class="gp-acp-stat">
+					<strong>{ACP_GITHUBPORTFOLIO_DISCUSSION_TOTAL}</strong>
+					<span>{L_ACP_GITHUBPORTFOLIO_STATUS_DISCUSSIONS}</span>
+				</div>
+				<div class="gp-acp-stat">
+					<strong><!-- IF S_ACP_GITHUBPORTFOLIO_HAS_LAST_SYNC -->{ACP_GITHUBPORTFOLIO_LAST_SYNC}<!-- ELSE -->-<!-- ENDIF --></strong>
+					<span>{L_ACP_GITHUBPORTFOLIO_STATUS_LAST_SYNC}</span>
+				</div>
+			</div>
+
+			<div class="gp-acp-status-panels">
+				<div class="gp-acp-panel">
+					<h3>{L_ACP_GITHUBPORTFOLIO_STATUS}</h3>
+					<ul class="gp-acp-list">
+						<li>
+							<span class="gp-label">{L_ACP_GITHUBPORTFOLIO_ENABLED}</span>
+							<span class="gp-value"><!-- IF S_ACP_GITHUBPORTFOLIO_ENABLED -->{L_YES}<!-- ELSE -->{L_NO}<!-- ENDIF --></span>
+						</li>
+						<li>
+							<span class="gp-label">{L_ACP_GITHUBPORTFOLIO_USERNAME}</span>
+							<span class="gp-value"><!-- IF S_ACP_GITHUBPORTFOLIO_HAS_USERNAME -->{MUNDOPHPBB_GITHUBPORTFOLIO_USERNAME}<!-- ELSE -->-<!-- ENDIF --></span>
+						</li>
+						<li>
+							<span class="gp-label">{L_ACP_GITHUBPORTFOLIO_STATUS_REGULAR_PROJECTS}</span>
+							<span class="gp-value">{ACP_GITHUBPORTFOLIO_REGULAR_TOTAL}</span>
+						</li>
+						<li>
+							<span class="gp-label">{L_ACP_GITHUBPORTFOLIO_STATUS_LANGUAGES}</span>
+							<span class="gp-value">{ACP_GITHUBPORTFOLIO_LANGUAGE_TOTAL}</span>
+						</li>
+						<li>
+							<span class="gp-label">{L_ACP_GITHUBPORTFOLIO_STATUS_LAST_SYNC}</span>
+							<span class="gp-value"><!-- IF S_ACP_GITHUBPORTFOLIO_HAS_LAST_SYNC -->{ACP_GITHUBPORTFOLIO_LAST_SYNC}<small>{ACP_GITHUBPORTFOLIO_LAST_SYNC_COUNT} repo(s)</small><!-- ELSE -->-<!-- ENDIF --></span>
+						</li>
+					</ul>
+				</div>
+
+				<div class="gp-acp-panel">
+					<h3>{L_ACP_GITHUBPORTFOLIO_PORTAL_BLOCK}</h3>
+					<ul class="gp-acp-list">
+						<li>
+							<span class="gp-label">{L_ACP_GITHUBPORTFOLIO_SHOW_PORTAL_BLOCK}</span>
+							<span class="gp-value"><!-- IF S_ACP_GITHUBPORTFOLIO_PORTAL_ENABLED -->{L_YES}<!-- ELSE -->{L_NO}<!-- ENDIF --></span>
+						</li>
+						<li>
+							<span class="gp-label">{L_ACP_GITHUBPORTFOLIO_PORTAL_LIMIT}</span>
+							<span class="gp-value">{MUNDOPHPBB_GITHUBPORTFOLIO_PORTAL_LIMIT}</span>
+						</li>
+						<li>
+							<span class="gp-label">{L_ACP_GITHUBPORTFOLIO_CACHE_TTL}</span>
+							<span class="gp-value">{MUNDOPHPBB_GITHUBPORTFOLIO_CACHE_TTL}</span>
+						</li>
+						<li>
+							<span class="gp-label">{L_ACP_GITHUBPORTFOLIO_STATUS_PUBLIC_PAGE}</span>
+							<span class="gp-value"><a href="{U_GITHUBPORTFOLIO_PAGE}" target="_blank" rel="noopener">{L_ACP_GITHUBPORTFOLIO_STATUS_OPEN_PAGE}</a></span>
+						</li>
+						<li>
+							<span class="gp-label">{L_ACP_GITHUBPORTFOLIO_STATUS_PROFILE}</span>
+							<span class="gp-value"><!-- IF GITHUBPORTFOLIO_PROFILE_URL --><a href="{GITHUBPORTFOLIO_PROFILE_URL}" target="_blank" rel="noopener">GitHub</a><!-- ELSE -->-<!-- ENDIF --></span>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="gp-acp-links">
+				<a href="{U_GITHUBPORTFOLIO_PAGE}" target="_blank" rel="noopener">{L_ACP_GITHUBPORTFOLIO_STATUS_OPEN_PAGE}</a>
+				<!-- IF GITHUBPORTFOLIO_PROFILE_URL --><a href="{GITHUBPORTFOLIO_PROFILE_URL}" target="_blank" rel="noopener">GitHub</a><!-- ENDIF -->
+			</div>
+		</div>
+	</fieldset>
+
+	<fieldset>
+		<legend>{L_ACP_GITHUBPORTFOLIO_STATUS_QUICK_HELP}</legend>
+		<p>{L_ACP_GITHUBPORTFOLIO_STATUS_QUICK_HELP_EXPLAIN}</p>
+		<ul class="gp-acp-help">
+			<li>{L_ACP_GITHUBPORTFOLIO_STATUS_HELP_FEATURED}</li>
+			<li>{L_ACP_GITHUBPORTFOLIO_STATUS_HELP_SELECTED}</li>
+			<li>{L_ACP_GITHUBPORTFOLIO_STATUS_HELP_HIDDEN}</li>
+			<li>{L_ACP_GITHUBPORTFOLIO_STATUS_HELP_DISCUSSIONS}</li>
+		</ul>
+	</fieldset>
+
+	<fieldset>
+		<legend>{L_ACP_GITHUBPORTFOLIO_SETTINGS}</legend>
+
+		<dl>
+			<dt>
+				<label for="mundophpbb_githubportfolio_enabled">{L_ACP_GITHUBPORTFOLIO_ENABLED}{L_COLON}</label><br>
+				<span>{L_ACP_GITHUBPORTFOLIO_ENABLED_EXPLAIN}</span>
+			</dt>
+			<dd>
+				<label><input type="radio" class="radio" name="mundophpbb_githubportfolio_enabled" value="1"<!-- IF MUNDOPHPBB_GITHUBPORTFOLIO_ENABLED --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="mundophpbb_githubportfolio_enabled" value="0"<!-- IF not MUNDOPHPBB_GITHUBPORTFOLIO_ENABLED --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="mundophpbb_githubportfolio_username">{L_ACP_GITHUBPORTFOLIO_USERNAME}{L_COLON}</label><br>
+				<span>{L_ACP_GITHUBPORTFOLIO_USERNAME_EXPLAIN}</span>
+			</dt>
+			<dd><input type="text" id="mundophpbb_githubportfolio_username" name="mundophpbb_githubportfolio_username" value="{MUNDOPHPBB_GITHUBPORTFOLIO_USERNAME}" class="text medium" /></dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="mundophpbb_githubportfolio_token">{L_ACP_GITHUBPORTFOLIO_TOKEN}{L_COLON}</label><br>
+				<span>{L_ACP_GITHUBPORTFOLIO_TOKEN_EXPLAIN}</span>
+			</dt>
+			<dd><input type="text" id="mundophpbb_githubportfolio_token" name="mundophpbb_githubportfolio_token" value="{MUNDOPHPBB_GITHUBPORTFOLIO_TOKEN}" class="text medium" autocomplete="off" /></dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="mundophpbb_githubportfolio_limit">{L_ACP_GITHUBPORTFOLIO_LIMIT}{L_COLON}</label><br>
+				<span>{L_ACP_GITHUBPORTFOLIO_LIMIT_EXPLAIN}</span>
+			</dt>
+			<dd><input type="number" id="mundophpbb_githubportfolio_limit" name="mundophpbb_githubportfolio_limit" value="{MUNDOPHPBB_GITHUBPORTFOLIO_LIMIT}" min="1" max="50" /></dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="mundophpbb_githubportfolio_cache_ttl">{L_ACP_GITHUBPORTFOLIO_CACHE_TTL}{L_COLON}</label><br>
+				<span>{L_ACP_GITHUBPORTFOLIO_CACHE_TTL_EXPLAIN}</span>
+			</dt>
+			<dd><input type="number" id="mundophpbb_githubportfolio_cache_ttl" name="mundophpbb_githubportfolio_cache_ttl" value="{MUNDOPHPBB_GITHUBPORTFOLIO_CACHE_TTL}" min="60" step="60" /></dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="mundophpbb_githubportfolio_hide_forks">{L_ACP_GITHUBPORTFOLIO_HIDE_FORKS}{L_COLON}</label><br>
+				<span>{L_ACP_GITHUBPORTFOLIO_HIDE_FORKS_EXPLAIN}</span>
+			</dt>
+			<dd>
+				<label><input type="radio" class="radio" name="mundophpbb_githubportfolio_hide_forks" value="1"<!-- IF MUNDOPHPBB_GITHUBPORTFOLIO_HIDE_FORKS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="mundophpbb_githubportfolio_hide_forks" value="0"<!-- IF not MUNDOPHPBB_GITHUBPORTFOLIO_HIDE_FORKS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="mundophpbb_githubportfolio_hide_archived">{L_ACP_GITHUBPORTFOLIO_HIDE_ARCHIVED}{L_COLON}</label><br>
+				<span>{L_ACP_GITHUBPORTFOLIO_HIDE_ARCHIVED_EXPLAIN}</span>
+			</dt>
+			<dd>
+				<label><input type="radio" class="radio" name="mundophpbb_githubportfolio_hide_archived" value="1"<!-- IF MUNDOPHPBB_GITHUBPORTFOLIO_HIDE_ARCHIVED --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="mundophpbb_githubportfolio_hide_archived" value="0"<!-- IF not MUNDOPHPBB_GITHUBPORTFOLIO_HIDE_ARCHIVED --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="mundophpbb_githubportfolio_sort_by">{L_ACP_GITHUBPORTFOLIO_SORT_BY}{L_COLON}</label><br>
+				<span>{L_ACP_GITHUBPORTFOLIO_SORT_BY_EXPLAIN}</span>
+			</dt>
+			<dd>
+				<select id="mundophpbb_githubportfolio_sort_by" name="mundophpbb_githubportfolio_sort_by">
+					<option value="updated"<!-- IF MUNDOPHPBB_GITHUBPORTFOLIO_SORT_BY eq 'updated' --> selected="selected"<!-- ENDIF -->>{L_ACP_GITHUBPORTFOLIO_SORT_UPDATED}</option>
+					<option value="stars"<!-- IF MUNDOPHPBB_GITHUBPORTFOLIO_SORT_BY eq 'stars' --> selected="selected"<!-- ENDIF -->>{L_ACP_GITHUBPORTFOLIO_SORT_STARS}</option>
+					<option value="name"<!-- IF MUNDOPHPBB_GITHUBPORTFOLIO_SORT_BY eq 'name' --> selected="selected"<!-- ENDIF -->>{L_ACP_GITHUBPORTFOLIO_SORT_NAME}</option>
+				</select>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="mundophpbb_githubportfolio_manual_order">{L_ACP_GITHUBPORTFOLIO_MANUAL_ORDER}{L_COLON}</label><br>
+				<span>{L_ACP_GITHUBPORTFOLIO_MANUAL_ORDER_EXPLAIN}</span>
+			</dt>
+			<dd><textarea id="mundophpbb_githubportfolio_manual_order" name="mundophpbb_githubportfolio_manual_order" rows="5" cols="45">{MUNDOPHPBB_GITHUBPORTFOLIO_MANUAL_ORDER}</textarea></dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="mundophpbb_githubportfolio_selected_repos">{L_ACP_GITHUBPORTFOLIO_SELECTED_REPOS}{L_COLON}</label><br>
+				<span>{L_ACP_GITHUBPORTFOLIO_SELECTED_REPOS_EXPLAIN}</span>
+			</dt>
+			<dd><textarea id="mundophpbb_githubportfolio_selected_repos" name="mundophpbb_githubportfolio_selected_repos" rows="6" cols="45">{MUNDOPHPBB_GITHUBPORTFOLIO_SELECTED_REPOS}</textarea></dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="mundophpbb_githubportfolio_hidden_repos">{L_ACP_GITHUBPORTFOLIO_HIDDEN_REPOS}{L_COLON}</label><br>
+				<span>{L_ACP_GITHUBPORTFOLIO_HIDDEN_REPOS_EXPLAIN}</span>
+			</dt>
+			<dd><textarea id="mundophpbb_githubportfolio_hidden_repos" name="mundophpbb_githubportfolio_hidden_repos" rows="6" cols="45">{MUNDOPHPBB_GITHUBPORTFOLIO_HIDDEN_REPOS}</textarea></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{L_ACP_GITHUBPORTFOLIO_PORTAL_BLOCK}</legend>
+
+		<dl>
+			<dt>
+				<label for="mundophpbb_githubportfolio_show_portal_block">{L_ACP_GITHUBPORTFOLIO_SHOW_PORTAL_BLOCK}{L_COLON}</label><br>
+				<span>{L_ACP_GITHUBPORTFOLIO_SHOW_PORTAL_BLOCK_EXPLAIN}</span>
+			</dt>
+			<dd>
+				<label><input type="radio" class="radio" name="mundophpbb_githubportfolio_show_portal_block" value="1"<!-- IF MUNDOPHPBB_GITHUBPORTFOLIO_SHOW_PORTAL_BLOCK --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="mundophpbb_githubportfolio_show_portal_block" value="0"<!-- IF not MUNDOPHPBB_GITHUBPORTFOLIO_SHOW_PORTAL_BLOCK --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="mundophpbb_githubportfolio_portal_title">{L_ACP_GITHUBPORTFOLIO_PORTAL_TITLE}{L_COLON}</label><br>
+				<span>{L_ACP_GITHUBPORTFOLIO_PORTAL_TITLE_EXPLAIN}</span>
+			</dt>
+			<dd><input type="text" id="mundophpbb_githubportfolio_portal_title" name="mundophpbb_githubportfolio_portal_title" value="{MUNDOPHPBB_GITHUBPORTFOLIO_PORTAL_TITLE}" class="text medium" /></dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="mundophpbb_githubportfolio_portal_limit">{L_ACP_GITHUBPORTFOLIO_PORTAL_LIMIT}{L_COLON}</label><br>
+				<span>{L_ACP_GITHUBPORTFOLIO_PORTAL_LIMIT_EXPLAIN}</span>
+			</dt>
+			<dd><input type="number" id="mundophpbb_githubportfolio_portal_limit" name="mundophpbb_githubportfolio_portal_limit" value="{MUNDOPHPBB_GITHUBPORTFOLIO_PORTAL_LIMIT}" min="1" max="12" /></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{L_ACP_GITHUBPORTFOLIO_FEATURED_TITLE}</legend>
+
+		<dl>
+			<dt>
+				<label for="mundophpbb_githubportfolio_featured_title">{L_ACP_GITHUBPORTFOLIO_FEATURED_TITLE}{L_COLON}</label><br>
+				<span>{L_ACP_GITHUBPORTFOLIO_FEATURED_TITLE_EXPLAIN}</span>
+			</dt>
+			<dd><input type="text" id="mundophpbb_githubportfolio_featured_title" name="mundophpbb_githubportfolio_featured_title" value="{MUNDOPHPBB_GITHUBPORTFOLIO_FEATURED_TITLE}" class="text medium" /></dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="mundophpbb_githubportfolio_featured_repos">{L_ACP_GITHUBPORTFOLIO_FEATURED_REPOS}{L_COLON}</label><br>
+				<span>{L_ACP_GITHUBPORTFOLIO_FEATURED_REPOS_EXPLAIN}</span>
+			</dt>
+			<dd><textarea id="mundophpbb_githubportfolio_featured_repos" name="mundophpbb_githubportfolio_featured_repos" rows="6" cols="45">{MUNDOPHPBB_GITHUBPORTFOLIO_FEATURED_REPOS}</textarea></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{L_ACP_GITHUBPORTFOLIO_DISCUSSION_LINKS}</legend>
+
+		<dl>
+			<dt>
+				<label for="mundophpbb_githubportfolio_repo_discussions">{L_ACP_GITHUBPORTFOLIO_REPO_DISCUSSIONS}{L_COLON}</label><br>
+				<span>{L_ACP_GITHUBPORTFOLIO_REPO_DISCUSSIONS_EXPLAIN}</span>
+			</dt>
+			<dd><textarea id="mundophpbb_githubportfolio_repo_discussions" name="mundophpbb_githubportfolio_repo_discussions" rows="8" cols="55">{MUNDOPHPBB_GITHUBPORTFOLIO_REPO_DISCUSSIONS}</textarea></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset class="submit-buttons">
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
+		<input class="button2" type="submit" id="refresh_cache" name="refresh_cache" value="{L_ACP_GITHUBPORTFOLIO_REFRESH_CACHE}" />
+		{S_FORM_TOKEN}
+	</fieldset>
+</form>
+
+<!-- INCLUDE overall_footer.html -->

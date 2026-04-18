@@ -1,0 +1,82 @@
+<!-- INCLUDE overall_header.html -->
+
+<h1>{L_ACP_GITHUBPORTFOLIO_TITLE}</h1>
+<p>{L_ACP_GITHUBPORTFOLIO_SETTINGS_EXPLAIN}</p>
+
+<form id="acp_githubportfolio" method="post" action="{U_ACTION}">
+    <fieldset>
+        <legend>{L_ACP_GITHUBPORTFOLIO_SETTINGS}</legend>
+
+        <dl>
+            <dt>
+                <label for="mundophpbb_githubportfolio_enabled">{L_ACP_GITHUBPORTFOLIO_ENABLED}{L_COLON}</label><br>
+                <span>{L_ACP_GITHUBPORTFOLIO_ENABLED_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <label><input type="radio" class="radio" name="mundophpbb_githubportfolio_enabled" value="1"<!-- IF MUNDOPHPBB_GITHUBPORTFOLIO_ENABLED --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+                <label><input type="radio" class="radio" name="mundophpbb_githubportfolio_enabled" value="0"<!-- IF not MUNDOPHPBB_GITHUBPORTFOLIO_ENABLED --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+            </dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="mundophpbb_githubportfolio_username">{L_ACP_GITHUBPORTFOLIO_USERNAME}{L_COLON}</label><br>
+                <span>{L_ACP_GITHUBPORTFOLIO_USERNAME_EXPLAIN}</span>
+            </dt>
+            <dd><input type="text" id="mundophpbb_githubportfolio_username" name="mundophpbb_githubportfolio_username" value="{MUNDOPHPBB_GITHUBPORTFOLIO_USERNAME}" class="text medium" /></dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="mundophpbb_githubportfolio_token">{L_ACP_GITHUBPORTFOLIO_TOKEN}{L_COLON}</label><br>
+                <span>{L_ACP_GITHUBPORTFOLIO_TOKEN_EXPLAIN}</span>
+            </dt>
+            <dd><input type="text" id="mundophpbb_githubportfolio_token" name="mundophpbb_githubportfolio_token" value="{MUNDOPHPBB_GITHUBPORTFOLIO_TOKEN}" class="text medium" autocomplete="off" /></dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="mundophpbb_githubportfolio_limit">{L_ACP_GITHUBPORTFOLIO_LIMIT}{L_COLON}</label><br>
+                <span>{L_ACP_GITHUBPORTFOLIO_LIMIT_EXPLAIN}</span>
+            </dt>
+            <dd><input type="number" id="mundophpbb_githubportfolio_limit" name="mundophpbb_githubportfolio_limit" value="{MUNDOPHPBB_GITHUBPORTFOLIO_LIMIT}" min="1" max="50" /></dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="mundophpbb_githubportfolio_cache_ttl">{L_ACP_GITHUBPORTFOLIO_CACHE_TTL}{L_COLON}</label><br>
+                <span>{L_ACP_GITHUBPORTFOLIO_CACHE_TTL_EXPLAIN}</span>
+            </dt>
+            <dd><input type="number" id="mundophpbb_githubportfolio_cache_ttl" name="mundophpbb_githubportfolio_cache_ttl" value="{MUNDOPHPBB_GITHUBPORTFOLIO_CACHE_TTL}" min="60" step="60" /></dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="mundophpbb_githubportfolio_hide_forks">{L_ACP_GITHUBPORTFOLIO_HIDE_FORKS}{L_COLON}</label><br>
+                <span>{L_ACP_GITHUBPORTFOLIO_HIDE_FORKS_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <label><input type="radio" class="radio" name="mundophpbb_githubportfolio_hide_forks" value="1"<!-- IF MUNDOPHPBB_GITHUBPORTFOLIO_HIDE_FORKS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+                <label><input type="radio" class="radio" name="mundophpbb_githubportfolio_hide_forks" value="0"<!-- IF not MUNDOPHPBB_GITHUBPORTFOLIO_HIDE_FORKS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+            </dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label for="mundophpbb_githubportfolio_hide_archived">{L_ACP_GITHUBPORTFOLIO_HIDE_ARCHIVED}{L_COLON}</label><br>
+                <span>{L_ACP_GITHUBPORTFOLIO_HIDE_ARCHIVED_EXPLAIN}</span>
+            </dt>
+            <dd>
+                <label><input type="radio" class="radio" name="mundophpbb_githubportfolio_hide_archived" value="1"<!-- IF MUNDOPHPBB_GITHUBPORTFOLIO_HIDE_ARCHIVED --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+                <label><input type="radio" class="radio" name="mundophpbb_githubportfolio_hide_archived" value="0"<!-- IF not MUNDOPHPBB_GITHUBPORTFOLIO_HIDE_ARCHIVED --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+            </dd>
+        </dl>
+    </fieldset>
+
+    <fieldset class="submit-buttons">
+        <input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
+        {S_FORM_TOKEN}
+    </fieldset>
+</form>
+
+<!-- INCLUDE overall_footer.html -->
