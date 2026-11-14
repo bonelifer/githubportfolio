@@ -49,8 +49,9 @@ class main_module
             set_config('mundophpbb_githubportfolio_enabled', $request->variable('mundophpbb_githubportfolio_enabled', 0));
             set_config('mundophpbb_githubportfolio_username', $request->variable('mundophpbb_githubportfolio_username', '', true));
             set_config('mundophpbb_githubportfolio_token', $request->variable('mundophpbb_githubportfolio_token', '', true));
-            set_config('mundophpbb_githubportfolio_limit', max(1, min(50, $request->variable('mundophpbb_githubportfolio_limit', 6))));
+            set_config('mundophpbb_githubportfolio_limit', max(1, min(500, $request->variable('mundophpbb_githubportfolio_limit', 50))));
             set_config('mundophpbb_githubportfolio_cache_ttl', max(60, $request->variable('mundophpbb_githubportfolio_cache_ttl', 1800)));
+            set_config('mundophpbb_githubportfolio_sync_interval', max(60, $request->variable('mundophpbb_githubportfolio_sync_interval', 300)));
             set_config('mundophpbb_githubportfolio_hide_forks', $request->variable('mundophpbb_githubportfolio_hide_forks', 1));
             set_config('mundophpbb_githubportfolio_hide_archived', $request->variable('mundophpbb_githubportfolio_hide_archived', 1));
             set_config('mundophpbb_githubportfolio_sort_by', $sort_by);
@@ -66,9 +67,10 @@ class main_module
 
             if ($is_refresh_cache)
             {
-                set_config('mundophpbb_githubportfolio_cache_buster', (string) time());
-                $github_api->get_all_repositories();
-                trigger_error($user->lang('ACP_GITHUBPORTFOLIO_CACHE_REFRESHED') . adm_back_link($this->u_action));
+                $message = $github_api->sync_batch(true)
+                    ? 'ACP_GITHUBPORTFOLIO_SYNC_STARTED'
+                    : 'ACP_GITHUBPORTFOLIO_SYNC_DEFERRED';
+                trigger_error($user->lang($message) . adm_back_link($this->u_action));
             }
 
             trigger_error($user->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
@@ -118,7 +120,8 @@ class main_module
             'MUNDOPHPBB_GITHUBPORTFOLIO_ENABLED'           => (int) ($config['mundophpbb_githubportfolio_enabled'] ?? 0),
             'MUNDOPHPBB_GITHUBPORTFOLIO_USERNAME'          => $config['mundophpbb_githubportfolio_username'] ?? '',
             'MUNDOPHPBB_GITHUBPORTFOLIO_TOKEN'             => $config['mundophpbb_githubportfolio_token'] ?? '',
-            'MUNDOPHPBB_GITHUBPORTFOLIO_LIMIT'             => (int) ($config['mundophpbb_githubportfolio_limit'] ?? 6),
+            'MUNDOPHPBB_GITHUBPORTFOLIO_LIMIT'             => (int) ($config['mundophpbb_githubportfolio_limit'] ?? 50),
+            'MUNDOPHPBB_GITHUBPORTFOLIO_SYNC_INTERVAL'     => (int) ($config['mundophpbb_githubportfolio_sync_interval'] ?? 300),
             'MUNDOPHPBB_GITHUBPORTFOLIO_CACHE_TTL'         => (int) ($config['mundophpbb_githubportfolio_cache_ttl'] ?? 1800),
             'MUNDOPHPBB_GITHUBPORTFOLIO_HIDE_FORKS'        => (int) ($config['mundophpbb_githubportfolio_hide_forks'] ?? 1),
             'MUNDOPHPBB_GITHUBPORTFOLIO_HIDE_ARCHIVED'     => (int) ($config['mundophpbb_githubportfolio_hide_archived'] ?? 1),
