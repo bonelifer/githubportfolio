@@ -1798,3 +1798,11 @@
         max-height: none;
     }
 }
+
+.githubportfolio-card .githubportfolio-stat,
+.githubportfolio-card .githubportfolio-badge--language,
+.githubportfolio-card.githubportfolio-card--portal .githubportfolio-description--placeholder,
+.githubportfolio-card.githubportfolio-card--page-portal .githubportfolio-description--placeholder {
+    background: #f6f8fa;
+    color: #344554;
+}
