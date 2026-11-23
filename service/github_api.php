@@ -10,18 +10,26 @@
 
 namespace mundophpbb\githubportfolio\service;
 
-use phpbb\config\config;
 use phpbb\cache\driver\driver_interface;
+use phpbb\config\config;
+use phpbb\config\db_text;
+use phpbb\lock\db;
 
 class github_api
 {
     protected config $config;
-    protected driver_interface $cache;
+    private const SYNC_STATE = 'mundophpbb_githubportfolio_sync_state';
+    private const BATCH_SIZE = 50;
+    private const MAX_REPOSITORIES = 500;
 
-    public function __construct(config $config, driver_interface $cache)
+    protected db_text $storage;
+    protected db $lock;
+
+    public function __construct(config $config, db_text $storage, db $lock, private driver_interface $cache)
     {
         $this->config = $config;
-        $this->cache = $cache;
+        $this->storage = $storage;
+        $this->lock = $lock;
     }
 
     public function get_repositories(?int $limit_override = null): array
@@ -30,11 +38,11 @@ class github_api
 
         if ($limit_override !== null)
         {
-            $limit_override = max(1, min(50, $limit_override));
+            $limit_override = max(1, min(self::MAX_REPOSITORIES, $limit_override));
             return array_slice($repos, 0, $limit_override);
         }
 
-        $default_limit = max(1, min(50, (int) ($this->config['mundophpbb_githubportfolio_limit'] ?? 6)));
+        $default_limit = max(1, min(self::MAX_REPOSITORIES, (int) ($this->config['mundophpbb_githubportfolio_limit'] ?? 50)));
         return array_slice($repos, 0, $default_limit);
     }
 
@@ -51,31 +59,32 @@ class github_api
             return [];
         }
 
-        $cache_ttl = max(60, (int) ($this->config['mundophpbb_githubportfolio_cache_ttl'] ?? 1800));
+        $state = $this->read_sync_state();
+        $repos = strcasecmp($state['published_username'] ?? '', $username) === 0
+            ? ($state['published'] ?? []) : [];
         $hide_forks = !empty($this->config['mundophpbb_githubportfolio_hide_forks']);
         $hide_archived = !empty($this->config['mundophpbb_githubportfolio_hide_archived']);
-        $token = trim((string) ($this->config['mundophpbb_githubportfolio_token'] ?? ''));
+        if (!isset($state['published_username']))
+        {
+            $legacy_key = '_mundophpbb_githubportfolio_' . md5(json_encode([
+                $username,
+                $hide_forks,
+                $hide_archived,
+                !empty($this->config['mundophpbb_githubportfolio_token']),
+                (string) ($this->config['mundophpbb_githubportfolio_cache_buster'] ?? '0'),
+            ]));
+            $legacy_repos = $this->cache->get($legacy_key);
+            $repos = is_array($legacy_repos) ? $legacy_repos : [];
+        }
+
+        $repos = array_filter($repos, static function (array $repo) use ($hide_forks, $hide_archived) {
+            return (!$hide_forks || !$repo['fork']) && (!$hide_archived || !$repo['archived']);
+        });
         $sort_by = $this->get_sort_by();
         $manual_order = $this->get_manual_order_repositories();
         $selected_repos = $this->get_selected_repositories();
         $hidden_repos = $this->get_hidden_repositories();
         $featured_repos = $this->get_featured_repositories_list();
-        $cache_buster = (string) ($this->config['mundophpbb_githubportfolio_cache_buster'] ?? '0');
-
-        $cache_key = '_mundophpbb_githubportfolio_' . md5(json_encode([
-            $username,
-            $hide_forks,
-            $hide_archived,
-            (bool) $token,
-            $cache_buster,
-        ]));
-
-        $repos = $this->cache->get($cache_key);
-        if ($repos === false || !is_array($repos))
-        {
-            $repos = $this->fetch_repositories($username, $token, $hide_forks, $hide_archived);
-            $this->cache->put($cache_key, $repos, $cache_ttl);
-        }
 
         $repos = $this->apply_hidden_repositories($repos, $hidden_repos);
         $repos = $this->apply_selected_repositories($repos, $selected_repos);
@@ -124,9 +133,95 @@ class github_api
         return $regular;
     }
 
-    protected function fetch_repositories(string $username, string $token, bool $hide_forks, bool $hide_archived): array
+    private function read_sync_state(): array
     {
-        $url = 'https://api.github.com/users/' . rawurlencode($username) . '/repos?sort=updated&direction=desc&per_page=100';
+        $state = json_decode((string) $this->storage->get(self::SYNC_STATE), true);
+        return is_array($state) ? $state : [];
+    }
+
+    public function is_sync_enabled(): bool
+    {
+        return !empty($this->config['mundophpbb_githubportfolio_enabled'])
+            && trim((string) $this->config['mundophpbb_githubportfolio_username']) !== '';
+    }
+
+    public function is_sync_due(): bool
+    {
+        $state = $this->read_sync_state();
+        $interval = max(60, (int) $this->config['mundophpbb_githubportfolio_sync_interval']);
+        $username = trim((string) $this->config['mundophpbb_githubportfolio_username']);
+        $pending = isset($state['next_page'])
+            || strcasecmp($state['published_username'] ?? '', $username) !== 0;
+        $delay = $pending ? $interval : max($interval, (int) $this->config['mundophpbb_githubportfolio_cache_ttl']);
+        return time() - ($state['attempted_at'] ?? 0) >= $delay;
+    }
+
+    public function sync_batch(bool $restart = false): bool
+    {
+        if (!$this->is_sync_enabled() || !$this->lock->acquire())
+        {
+            return false;
+        }
+
+        try
+        {
+            if (!$restart && !$this->is_sync_due())
+            {
+                return false;
+            }
+
+            $state = $this->read_sync_state();
+            $username = trim((string) $this->config['mundophpbb_githubportfolio_username']);
+            if ($restart || strcasecmp($state['pending_username'] ?? '', $username) !== 0)
+            {
+                $state['pending_username'] = $username;
+                $state['next_page'] = 1;
+                $state['pending'] = [];
+            }
+
+            $page = $state['next_page'];
+            $token = trim((string) $this->config['mundophpbb_githubportfolio_token']);
+            $batch = $this->fetch_batch($username, $token, $page);
+            $state['attempted_at'] = time();
+            if ($batch === null)
+            {
+                // Keep the pending page and published snapshot for the next eligible cron run.
+                $this->storage->set(self::SYNC_STATE, json_encode($state, JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR));
+                return false;
+            }
+
+            $state['pending'] = array_replace($state['pending'], $batch['repos']);
+            $complete = $batch['last'] || $page >= intdiv(self::MAX_REPOSITORIES, self::BATCH_SIZE);
+            if ($complete)
+            {
+                $state['published'] = $state['pending'];
+                $state['published_username'] = $username;
+                unset($state['pending'], $state['pending_username'], $state['next_page']);
+            }
+            else
+            {
+                $state['next_page']++;
+            }
+
+            $this->storage->set(self::SYNC_STATE, json_encode($state, JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR));
+            if ($complete)
+            {
+                $this->config->set('mundophpbb_githubportfolio_last_sync_time', (string) time());
+                $this->config->set('mundophpbb_githubportfolio_last_sync_count', (string) count($state['published']));
+            }
+
+            return true;
+        }
+        finally
+        {
+            $this->lock->release();
+        }
+    }
+
+    protected function fetch_batch(string $username, string $token, int $page): ?array
+    {
+        $url = 'https://api.github.com/users/' . rawurlencode($username)
+            . '/repos?sort=updated&direction=desc&per_page=' . self::BATCH_SIZE . '&page=' . $page;
         $headers = [
             'User-Agent: phpBB-GitHubPortfolio',
             'Accept: application/vnd.github+json',
@@ -138,15 +233,10 @@ class github_api
         }
 
         $response = $this->http_get($url, $headers);
-        if ($response === null)
+        $decoded = $response === null ? null : json_decode($response, true);
+        if (!is_array($decoded) || !array_is_list($decoded))
         {
-            return [];
-        }
-
-        $decoded = json_decode($response, true);
-        if (!is_array($decoded))
-        {
-            return [];
+            return null;
         }
 
         $repos = [];
@@ -157,17 +247,7 @@ class github_api
                 continue;
             }
 
-            if ($hide_forks && !empty($repo['fork']))
-            {
-                continue;
-            }
-
-            if ($hide_archived && !empty($repo['archived']))
-            {
-                continue;
-            }
-
-            $repos[] = [
+            $repos[strtolower((string) $repo['name'])] = [
                 'name'              => (string) ($repo['name'] ?? ''),
                 'html_url'          => (string) ($repo['html_url'] ?? ''),
                 'description'       => trim((string) ($repo['description'] ?? '')),
@@ -181,10 +261,7 @@ class github_api
             ];
         }
 
-        \set_config('mundophpbb_githubportfolio_last_sync_time', (string) time());
-        \set_config('mundophpbb_githubportfolio_last_sync_count', (string) count($repos));
-
-        return $repos;
+        return ['repos' => $repos, 'last' => count($decoded) < self::BATCH_SIZE];
     }
 
     protected function get_sort_by(): string
