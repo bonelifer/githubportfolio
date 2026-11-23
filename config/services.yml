@@ -3,6 +3,8 @@ services:
         class: mundophpbb\githubportfolio\service\github_api
         arguments:
             - '@config'
+            - '@config_text'
+            - '@mundophpbb.githubportfolio.sync_lock'
             - '@cache.driver'
 
     mundophpbb.githubportfolio.controller.main:
@@ -24,3 +26,19 @@ services:
             - '@mundophpbb.githubportfolio.github_api'
         tags:
             - { name: event.listener }
+
+    mundophpbb.githubportfolio.sync_lock:
+        class: phpbb\lock\db
+        arguments:
+            - mundophpbb_githubportfolio_sync_lock
+            - '@config'
+            - '@dbal.conn'
+
+    mundophpbb.githubportfolio.cron.sync:
+        class: mundophpbb\githubportfolio\cron\task\sync
+        arguments:
+            - '@mundophpbb.githubportfolio.github_api'
+        calls:
+            - [set_name, [cron.task.mundophpbb.githubportfolio.sync]]
+        tags:
+            - { name: cron.task }
